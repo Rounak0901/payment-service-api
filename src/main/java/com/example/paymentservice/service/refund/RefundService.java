@@ -1,4 +1,4 @@
-package com.example.paymentservice.service;
+package com.example.paymentservice.service.refund;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,9 @@ public class RefundService implements IRefundService {
     @Autowired
     private RazorpayPaymentGatewayClient razorpayPaymentGatewayClient;
 
-    public String issueRefund(Double amount, String receipt) {
+    public String issueRefund(String paymentId, Double amount, String receipt) {
       try {
-        return razorpayPaymentGatewayClient.issueInstantRefund(amount, receipt);
+        return razorpayPaymentGatewayClient.issueInstantRefund(paymentId, amount, receipt);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -26,9 +26,7 @@ public class RefundService implements IRefundService {
       try {
         return razorpayPaymentGatewayClient.updateRefund(refundId, jsonObject);
       } catch (Exception e) {
-        e.printStackTrace();
-        return refundId;
+        throw new RuntimeException("RazorPay: Refund update failed");
       }
-      // return refundId;
     }
 }
